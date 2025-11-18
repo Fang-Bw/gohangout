@@ -54,7 +54,7 @@ func TestStdinConfigParsing(t *testing.T) {
 					t.Errorf("newStdinInput() should return *StdinInput")
 					return
 				}
-				
+
 				// The decoder is created so we can't directly check config
 				// but we can verify the input was created successfully
 				if stdinInput == nil {

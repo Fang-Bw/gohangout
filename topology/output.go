@@ -22,12 +22,12 @@ type buildOutputFunc func(outputType string, config map[any]any) *OutputBox
 func BuildOutputs(config map[string]any, buildOutput buildOutputFunc) []*OutputBox {
 	rst := make([]*OutputBox, 0)
 
-	for _, outputs := range config["outputs"].([]any) {
+	for _, outputs := range config["outputs"].([]any) { // 读取配置文件 配置output节点
 		for outputType, outputConfig := range outputs.(map[any]any) {
 			outputType := outputType.(string)
 			klog.Infof("output type: %s", outputType)
 			outputConfig := outputConfig.(map[any]any)
-			output := buildOutput(outputType, outputConfig)
+			output := buildOutput(outputType, outputConfig) // 策略模式，调用每个output的方法
 
 			output.promCounter = GetPromCounter(outputConfig)
 

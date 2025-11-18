@@ -1,6 +1,6 @@
 package topology
 
-// FilterBox and OutputBox is Processor
+// FilterBox and OutputBox is Processor // 也比较好理解，filter是中间处理步骤，output是最后输出的步骤
 type Processor interface {
 	Process(map[string]any) map[string]any
 }
@@ -12,7 +12,7 @@ func (n *NilProcessorInLink) Process(event map[string]any) map[string]any {
 }
 
 // ProcessorNode is a node in the filter/output link
-type ProcessorNode struct {
+type ProcessorNode struct { // Processor链表结构的实现
 	Processor Processor
 	Next      *ProcessorNode
 }

@@ -8,9 +8,9 @@ import (
 	"k8s.io/klog/v2"
 )
 
-type BuildInputFunc func(map[any]any) topology.Input
+type BuildInputFunc func(map[any]any) topology.Input // 函数，返回接口 topology.Input
 
-var registeredInput map[string]BuildInputFunc = make(map[string]BuildInputFunc)
+var registeredInput map[string]BuildInputFunc = make(map[string]BuildInputFunc) // 再次将构建每个input的逻辑下沉，map只需接收 返回值为 topology.Input 的类型即可
 
 // Register is used by input plugins to register themselves
 func Register(inputType string, bf BuildInputFunc) {

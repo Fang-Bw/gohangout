@@ -26,6 +26,7 @@ type StdinInput struct {
 	stop bool
 }
 
+// 1.每个 Input实现 都会初始化注册到map里
 func init() {
 	Register("Stdin", newStdinInput)
 }
@@ -43,14 +44,14 @@ func newStdinInput(config map[any]any) topology.Input {
 		scanner: bufio.NewScanner(os.Stdin),
 	}
 
-	return p
+	return p // 类型实现了接口，所以可以返回这个类型
 }
 
 func (p *StdinInput) ReadOneEvent() map[string]any {
 	p.scanLock.Lock()
 	defer p.scanLock.Unlock()
 
-	if p.scanner.Scan() {
+	if p.scanner.Scan() { // 标准输入是读取控制台的数据
 		t := p.scanner.Bytes()
 		msg := make([]byte, len(t))
 		copy(msg, t)

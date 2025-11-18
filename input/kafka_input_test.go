@@ -28,10 +28,10 @@ func TestKafkaInputConfigParsing(t *testing.T) {
 				},
 			},
 			expected: KafkaInputConfig{
-				Codec:              "json",
-				DecorateEvents:     true,
-				Topic:              map[string]int{"test-topic": 2},
-				Assign:             nil,
+				Codec:               "json",
+				DecorateEvents:      true,
+				Topic:               map[string]int{"test-topic": 2},
+				Assign:              nil,
 				MessagesQueueLength: 100,
 				ConsumerSettings: map[string]any{
 					"bootstrap.servers": "localhost:9092",
@@ -56,10 +56,10 @@ func TestKafkaInputConfigParsing(t *testing.T) {
 				},
 			},
 			expected: KafkaInputConfig{
-				Codec:              "plain",
-				DecorateEvents:     false,
-				Topic:              nil,
-				Assign:             map[string][]int{"test-topic": {0, 1, 2}},
+				Codec:               "plain",
+				DecorateEvents:      false,
+				Topic:               nil,
+				Assign:              map[string][]int{"test-topic": {0, 1, 2}},
 				MessagesQueueLength: 0,
 				ConsumerSettings: map[string]any{
 					"bootstrap.servers": "localhost:9092",
@@ -78,10 +78,10 @@ func TestKafkaInputConfigParsing(t *testing.T) {
 				},
 			},
 			expected: KafkaInputConfig{
-				Codec:              "",
-				DecorateEvents:     false,
-				Topic:              map[string]int{"test-topic": 1},
-				Assign:             nil,
+				Codec:               "",
+				DecorateEvents:      false,
+				Topic:               map[string]int{"test-topic": 1},
+				Assign:              nil,
 				MessagesQueueLength: 0,
 				ConsumerSettings: map[string]any{
 					"bootstrap.servers": "localhost:9092",
@@ -151,9 +151,9 @@ func TestKafkaInputConfigParsing(t *testing.T) {
 				if tt.expected.MessagesQueueLength != 0 {
 					kafkaConfig.MessagesQueueLength = 10
 				}
-				
+
 				SafeDecodeConfig("Kafka", tt.config, &kafkaConfig)
-				
+
 				if !equalKafkaInputConfig(kafkaConfig, tt.expected) {
 					t.Errorf("SafeDecodeConfig() = %v, want %v", kafkaConfig, tt.expected)
 				}
@@ -167,17 +167,17 @@ func equalKafkaInputConfig(a, b KafkaInputConfig) bool {
 	if a.Codec != b.Codec || a.DecorateEvents != b.DecorateEvents || a.MessagesQueueLength != b.MessagesQueueLength {
 		return false
 	}
-	
+
 	// Compare Topic maps
 	if !equalStringIntMap(a.Topic, b.Topic) {
 		return false
 	}
-	
+
 	// Compare Assign maps
 	if !equalStringIntSliceMap(a.Assign, b.Assign) {
 		return false
 	}
-	
+
 	// Compare ConsumerSettings maps
 	return equalStringAnyMap(a.ConsumerSettings, b.ConsumerSettings)
 }

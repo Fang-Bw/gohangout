@@ -45,7 +45,7 @@ func SafeDecodeConfig(inputType string, config map[any]any, result any) {
 	// Use a decoder with UseNumber to preserve number precision and allow type flexibility
 	decoder := json.NewDecoder(strings.NewReader(string(jsonBytes)))
 	decoder.UseNumber()
-	
+
 	if err := decoder.Decode(result); err != nil {
 		panic(fmt.Sprintf("%s input configuration error: %v", inputType, err))
 	}

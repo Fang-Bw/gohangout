@@ -16,7 +16,7 @@ import (
 type InputBox struct {
 	config             map[string]any // whole config
 	input              topology.Input
-	outputsInAllWorker [][]*topology.OutputBox
+	outputsInAllWorker [][]*topology.OutputBox // 二维切片，一维是worker，每个worker会构建一套filter/output链
 	stop               bool
 	once               sync.Once
 	shutdownChan       chan bool
@@ -63,14 +63,14 @@ func NewInputBox(input topology.Input, inputConfig map[any]any, config map[strin
 }
 
 func (box *InputBox) beat(workerIdx int) {
-	var firstNode *topology.ProcessorNode = box.buildTopology(workerIdx)
+	var firstNode *topology.ProcessorNode = box.buildTopology(workerIdx) // 构建output的链式结构
 
 	var (
 		event map[string]any
 	)
 
 	for !box.stop {
-		event = box.input.ReadOneEvent()
+		event = box.input.ReadOneEvent() // 循环执行读取
 		if box.promCounter != nil {
 			box.promCounter.Inc()
 		}
@@ -91,12 +91,12 @@ func (box *InputBox) beat(workerIdx int) {
 			v, _ := r.Render(event)
 			event = fs.SetField(event, v, "", false)
 		}
-		firstNode.Process(event)
+		firstNode.Process(event) // processor 链式读取
 	}
 }
 
 func (box *InputBox) buildTopology(workerIdx int) *topology.ProcessorNode {
-	outputs := topology.BuildOutputs(box.config, output.BuildOutput)
+	outputs := topology.BuildOutputs(box.config, output.BuildOutput) // 构建每个worker的output
 	box.outputsInAllWorker[workerIdx] = outputs
 
 	var outputProcessor topology.Processor
